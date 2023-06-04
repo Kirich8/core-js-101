@@ -486,8 +486,13 @@ function getIdentityMatrix(n) {
  *     0, 100 => [ 0, 1, 2, ..., 100 ]
  *     3, 3   => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
+function getIntervalArray(start, end) {
+  let i = -1;
+
+  return Array(end - start + 1).fill().map(() => {
+    i += 1;
+    return start + i;
+  });
 }
 
 /**
@@ -535,8 +540,21 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const result = new Map();
+
+  array.filter((item) => {
+    if (result.has(keySelector(item))) {
+      result.get(keySelector(item)).push(valueSelector(item));
+      result.set(keySelector(item), result.get(keySelector(item)));
+    } else {
+      result.set(keySelector(item), Array(1).fill(valueSelector(item)));
+    }
+
+    return item;
+  });
+
+  return result;
 }
 
 
@@ -553,8 +571,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.map((item) => childrenSelector(item)).flat();
 }
 
 
@@ -570,8 +588,8 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  return indexes.reduce((acc, cur) => acc[cur], arr);
 }
 
 
@@ -593,8 +611,19 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const result = [];
+
+  if (arr.length % 2 === 0) {
+    result.push(...arr.slice(arr.length / 2));
+    result.push(...arr.slice(0, arr.length / 2));
+  } else {
+    result.push(...arr.slice(arr.length / 2 + 1));
+    result.push(Math.round(arr.length / 2));
+    result.push(...arr.slice(0, arr.length / 2));
+  }
+
+  return result;
 }
 
 
